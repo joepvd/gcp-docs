@@ -1,0 +1,21 @@
+#!/usr/bin/gawk -f
+BEGIN {
+  if (!(curl in SYMTAB)) {
+    curl = "curl -sSL"
+  }
+}
+sub(/^## /, "") {
+  c++ # set chapter number
+  s=0 # reset section number
+  chapter=sprintf("%02i_%s", c, tolower(gensub(/[ /]+/, "_", "g", $0)))
+}
+/^https/ {
+  s++
+  url = $0
+  split(url, line, "/")
+  section = sprintf("%02i_%s", s, line[length(line)-1])
+  outfile = sprintf("docs/%s_%s.html", chapter, section)
+  cmd = sprintf("%s \"%s\">\"%s\"", curl, url, outfile)
+  print "Executing:", cmd
+  system(cmd)
+}
