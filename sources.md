@@ -95,5 +95,6 @@ https://cloud.google.com/dataproc/docs/resources/faq/
 https://cloud.google.com/dataflow/
 https://cloud.google.com/dataflow/faq/
 ## Pub/Sub
-https://cloud.google.com/pubsub/
-https://cloud.google.com/pubsub/docs/faq/
+https://cloud.google.com/pubsub/docs/overview/
+https://cloud.google.com/pubsub/architecture/
+https://cloud.google.com/pubsub/docs/tasks-vs-pubsub/

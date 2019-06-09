@@ -10,7 +10,7 @@ Gets the urls from the `sources.txt` file, and puts the html in `docs/`
 
 
 ```
-make sanitize-html
+make sanitize
 ```
 Takes the files from `docs/`, and cleans the html so it can be parsed better in
 later stages. Results are in `html/`.
