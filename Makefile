@@ -3,6 +3,10 @@ SHELL := /bin/bash
 DOCFILES ?= $(shell script/get list sources.md)
 SANITIZED_HTML ?= $(addprefix sanitize/, $(notdir $(DOCFILES)))
 SANITIZED_MARKDOWN ?= $(SANITIZED_HTML:.html=.md)
+FILENAME = google_cloud_architect_docs
+MOBI = $(FILENAME).mobi
+EPUB = $(FILENAME).epub
+MD = $(FILENAME).md
 
 .PHONY: get
 get: $(DOCFILES)
@@ -24,18 +28,24 @@ sanitize/%: docs/% script/sanitize
 markdown: .ensure-pandoc $(SANITIZED_MARKDOWN)
 
 .PHONY: single-md
-single-md: sanitize/alldocs.md
+single-md: $(MD)
 
 sanitize/%.md: sanitize/%.html
 	pandoc -s $< -o $@
 
-sanitize/alldocs.md: $(SANITIZED_MARKDOWN)
+$(MD): $(SANITIZED_MARKDOWN)
 	cat $^ > $@
 
 .PHONY: epub
-epub: .ensure-pandoc docs.epub
+epub: .ensure-pandoc $(EPUB)
 
-docs.epub: sanitize/alldocs.md
+.PHONY: mobi
+mobi: $(MOBI)
+
+%.mobi: %.epub script/mobi
+	script/mobi $<
+
+$(EPUB): $(MD)
 	pandoc -s $< -o $@
 
 .PHONY: .ensure-pandoc

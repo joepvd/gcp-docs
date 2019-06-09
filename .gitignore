@@ -1,4 +1,4 @@
 docs/
 !docs/.gitkeep
 sanitize/
-*.epub
+google_cloud_architect_docs.*

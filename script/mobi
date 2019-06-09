@@ -1,0 +1,38 @@
+#!/bin/bash
+
+set -euo pipefail
+
+error() {
+  echo "$@" >/dev/stderr
+  exit 1
+}
+
+main() {
+  infile="$1"
+  [[ -f "$infile" ]] || {
+    error "Specify valid and existing input file"
+  }
+  outfile="${infile%epub}mobi"
+  [[ "$infile" == "$outfile" ]] && {
+    error "Ensure infile has epub extension"
+  }
+
+  if ! command -v ebook-convert; then
+    error "Ensure ebook-convert is installed. This gets distributed with calibre."
+  fi >/dev/null
+
+  wrap=""
+  if [[ -z "$DISPLAY" ]]; then
+    # Need to wrap ebook-convert in a virtual xorg frame buffer
+    if ! command -v xvfb-run; then
+      error "Please install xvfb-run for running headless">/dev/stderr
+    fi >/dev/null
+    wrap="xvfb-run "
+  fi
+
+  cmd="$wrap ebook-convert $infile $outfile"
+  echo "$cmd"
+  exec $cmd
+}
+
+main "$@"
