@@ -1,6 +1,6 @@
 SHELL := /bin/bash
 
-DOCFILES ?= $(shell script/get list sources.md)
+DOCFILES ?= $(addprefix docs/, $(shell script/get list sources.md))
 SANITIZED_HTML ?= $(addprefix scratch/, $(notdir $(DOCFILES)))
 SANITIZED_MARKDOWN ?= $(SANITIZED_HTML:.html=.md)
 

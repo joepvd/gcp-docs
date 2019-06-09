@@ -41,16 +41,14 @@ sub(/^## /, "") {
   url = $0
   split(url, line, "/")
   section = sprintf("%02i_%s", s, line[length(line)-1])
-  outfile = sprintf("docs/%s_%s.html", chapter, section)
+  outfile = sprintf("%s_%s.html", chapter, section)
   if (action == "list") {
     print outfile
   }
   else if (document) {
-    if (document == outfile) {
-      download(url, outfile)
+    split(document, d, "/")
+    if (d[length(d)] == outfile) {
+      download(url, document)
     }
-  }
-  else {
-    download(url, outfile)
   }
 }
