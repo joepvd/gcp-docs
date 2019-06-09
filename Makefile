@@ -13,10 +13,11 @@ MD = $(FILENAME).md
 all: epub mobi
 
 .PHONY: test
-test: .ensure-shfmt .ensure-shellcheck
+test: .ensure-shfmt .ensure-shellcheck .ensure-checkmake
 	shfmt -w -i 2 $$(shfmt -l .)
 	shellcheck $$(shfmt -l .)
 	git diff --exit-code -- $$(shfmt -l .)
+	checkmake Makefile
 
 .PHONY: get
 get: $(DOCFILES)
@@ -50,7 +51,7 @@ $(MD): $(SANITIZED_MARKDOWN)
 epub: .ensure-pandoc $(EPUB)
 
 .PHONY: mobi
-mobi: .ensure-calibre $(MOBI)
+mobi: .ensure-ebook-convert $(MOBI)
 
 %.mobi: %.epub script/mobi
 	script/mobi $<
@@ -58,14 +59,6 @@ mobi: .ensure-calibre $(MOBI)
 $(EPUB): $(MD)
 	pandoc -s $< -o $@
 
-.PHONY: .ensure-pandoc
-.ensure-pandoc:
-	@command -v pandoc >/dev/null
-
-.PHONY: .ensure-shfmt
-.ensure-shfmt:
-	@command -v shfmt >/dev/null
-
-.PHONY: .ensure-shellcheck
-.ensure-shellcheck:
-	@command -v shellcheck >/dev/null
+.PHONY: .ensure-%
+.ensure-%:
+	@command -v $* >/dev/null
