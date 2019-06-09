@@ -6,7 +6,6 @@ import sys
 
 def main():
     infile = sys.argv[1]
-    outfile = sys.argv[2]
     with open(infile) as f:
         soup = BeautifulSoup(f, features="html.parser")
         h1s = soup.find_all("h1", class_="devsite-page-title")
@@ -15,8 +14,7 @@ def main():
             eprint(f'No h1 for {infile}')
         if len(bodies) != 1:
             eprint(f'No bodies for {infile}')
-        with open(outfile, "w") as f:
-            print(h1s[0], bodies[0], file=f)
+        print(h1s[0], bodies[0])
 
 def eprint(*args, **kwargs):
     print(u"\u001b[31m", *args, u"\u001b[0m", file=sys.stderr, **kwargs)
