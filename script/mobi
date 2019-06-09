@@ -25,13 +25,14 @@ main() {
   if [[ -z "$DISPLAY" ]]; then
     # Need to wrap ebook-convert in a virtual xorg frame buffer
     if ! command -v xvfb-run; then
-      error "Please install xvfb-run for running headless">/dev/stderr
+      error "Please install xvfb-run for running headless" >/dev/stderr
     fi >/dev/null
     wrap="xvfb-run "
   fi
 
   cmd="$wrap ebook-convert $infile $outfile"
   echo "$cmd"
+  #shellcheck disable=SC2086
   exec $cmd
 }
 
