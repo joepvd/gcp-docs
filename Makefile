@@ -8,6 +8,7 @@ FILENAME = google_cloud_architect_docs
 MOBI = $(FILENAME).mobi
 EPUB = $(FILENAME).epub
 MD = $(FILENAME).md
+FRONTMATTER = templates/frontmatter.yaml
 
 .PHONY: all
 all: epub mobi
@@ -27,7 +28,11 @@ docs/%:
 
 .PHONY: clean
 clean:
-	rm -fr docs/* scratch/* $(MD) $(EPUB) $(MOBI)
+	rm -fr scratch/* $(MD) $(EPUB) $(MOBI)
+
+.PHONY: clean-all
+clean-all: clean
+	rm -rf docs/*
 
 .PHONY: sanitize
 sanitize: $(SANITIZED_HTML)
@@ -44,8 +49,8 @@ single-md: $(MD)
 scratch/%.md: scratch/%.html
 	pandoc -s $< -o $@
 
-$(MD): $(SANITIZED_MARKDOWN)
-	cat $^ > $@
+$(MD): $(SANITIZED_MARKDOWN) $(FRONTMATTER)
+	cat $(FRONTMATTER) $^ > $@
 
 .PHONY: epub
 epub: .ensure-pandoc $(EPUB)
@@ -57,7 +62,7 @@ mobi: .ensure-ebook-convert $(MOBI)
 	script/mobi $<
 
 $(EPUB): $(MD)
-	pandoc -s $< -o $@
+	pandoc -s $< -o $@ --table-of-contents
 
 .PHONY: .ensure-%
 .ensure-%:
